@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
     [SerializeField]  private float _jumpHeight = 15.0f;
     private float _yVelocity;
     private Vector3 _direction, _velocity;
+    private Rigidbody _box;
+    [SerializeField] private float _pushPower = 2.0f;
+    private Vector3 _pushDir;
     private Vector3 _wallSurfaceNormal;
     private bool _canDoubleJump = false;
     private bool _canWallJump = false;
@@ -93,6 +96,23 @@ public class Player : MonoBehaviour
     /// <param name="hit">The ControllerColliderHit data associated with this collision.</param>
     void OnControllerColliderHit(ControllerColliderHit hit) 
     {
+        // chk for the moving box. (confirm hv rigidbody inspector; tag MovingBox)
+        // push power - delcare var
+        if (hit.transform.tag == "MovingBox")
+        {
+            // confirm it has rigidbody
+            _box = hit.collider.GetComponent<Rigidbody>();
+
+            if (_box != null) // we found rigidbody
+            {
+                // make it move; get hold of rigid body and calc push/move dir
+                // hit.moveDirection.x; move at box's pos
+                _pushDir = new Vector3(hit.moveDirection.x, 0, 0);
+                // push! using moving box velocity (then apply velocity of box); grab rb which is _box
+                // velocity is dir * speed
+                _box.velocity = _pushDir * _pushPower;
+            }
+        }
         // condition when to wall jump
         // if not grounded and touching a wall
         // means we are in mid air; and if we are hitting a wall

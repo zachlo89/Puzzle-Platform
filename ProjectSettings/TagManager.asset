@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Lift
   - Wall
+  - MovingBox
   layers:
   - Default
   - TransparentFX
